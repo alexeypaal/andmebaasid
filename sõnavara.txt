@@ -1,0 +1,9 @@
+    Andmebaas - База данных
+    Andmebaaside haldussüsteem - Система управления базами данных (СУБД)
+    Tabel - Таблица
+    Rida - Строка
+    Veerg - Столбец
+    Kirjed - Записи
+    Väljad - Поля
+    Andmed - Данные
+    Väärtused - Значения
