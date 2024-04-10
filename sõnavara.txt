@@ -10,6 +10,6 @@
     cd desktop
     git init AndmebaasidLOGITpv22
     git config --global user.name "Alexey Paal"
-    gir config --global user.email "cyberwasabi69@gmail.com"
+    git config --global user.email "cyberwasabi69@gmail.com"
     git status 
 
