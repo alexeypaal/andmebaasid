@@ -69,3 +69,17 @@ values (@uusfilm,@kestvus,@revisoor,@aasta);
 SELECT * FROM film;
 END;
 EXEC lisafilm 'Test',222, 'Test',2000;
+
+--proceduur, mis uuendab rezisööri andmed filmiNimi järgi 
+
+CREATE procedure uuendaRevisorFilmis
+@uusreisoor varchar (50),
+@filmNimetus varchar (50)
+AS
+BEGIN
+Select * from film WHERE filmNimetus=@filmNimetus;
+UPDATE film SET rezisoor=@uusreisoor
+WHERE filmNimetus=@filmNimetus
+Select * from film WHERE filmNimetus=@filmNimetus;
+END;
+EXEC uuendaRevisorFilmis 'Oskar Luts','Test';
