@@ -83,3 +83,79 @@ WHERE filmNimetus=@filmNimetus
 Select * from film WHERE filmNimetus=@filmNimetus;
 END;
 EXEC uuendaRevisorFilmis 'Oskar Luts','Test';
+
+
+
+
+
+----Iseseisev töö
+
+CREATE TABLE OpilasePaevik (
+    OpilaneNimi varchar(25),
+    OpilaseGrupp varchar(10),
+    hinne int,
+    kuupaev date
+);
+
+SELECT * From OpilasePaevik
+
+CREATE PROCEDURE Uuenda_Hinne
+    @OpilaneNimi varchar(25),
+    @hinne int
+AS 
+BEGIN
+    UPDATE OpilasePaevik
+    SET hinne = @hinne
+    WHERE OpilaneNimi = @OpilaneNimi;
+END;
+
+EXEC Uuenda_Hinne @OpilaneNimi = 'Maks', @hinne = 4;
+
+CREATE PROCEDURE LisaUus_Opilast
+    @OpilaneNimi varchar(25),
+    @OpilaseGrupp varchar(10),
+    @hinne int,
+    @kuupaev date
+AS
+BEGIN
+    INSERT INTO OpilasePaevik (OpilaneNimi, OpilaseGrupp, hinne, kuupaev)
+    VALUES (@OpilaneNimi, @opilaseGrupp, @hinne, @kuupaev);
+END;
+EXEC LisaUus_Opilast @OpilaneNimi = 'Laura', @OpilaseGrupp = 'D', @hinne = 2, @kuupaev = '2024-04-22';
+
+
+
+CREATE PROCEDURE Uuenda_Nimi
+    @Nimi varchar(25),
+    @PereNimi varchar(25)
+AS
+BEGIN
+    UPDATE OpilasePaevik
+    SET OpilaneNimi = @Nimi
+    WHERE OpilaneNimi = @PereNimi;
+END;
+
+EXEC Uuenda_Nimi @PereNimi = 'Kaalus', @Nimi = 'Erik';
+
+CREATE PROCEDURE Lisa_UusOpilast
+    @OpilaneNimi varchar(25),
+    @OpilaseGrupp varchar(10),
+    @Hinne int,
+    @Kuupaev date
+AS
+BEGIN
+    INSERT INTO OpilasePaevik (OpilaneNimi, OpilaseGrupp, hinne, kuupaev)
+    VALUES (@OpilaneNimi, @OpilaseGrupp, @Hinne, @Kuupaev);
+END;
+
+
+CREATE PROCEDURE UuendaNime
+    @Nimi varchar(25),
+    @Perenimi varchar(25)
+AS
+BEGIN
+    UPDATE OpilasePaevik
+    SET OpilaneNimi = @Nimi
+    WHERE OpilaneNimi = @Perenimi;
+END;
+SELECT * From OpilasePaevik
