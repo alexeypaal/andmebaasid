@@ -1,9 +1,9 @@
 Команды чтобы все скачать с github
-C:\Users\opilane>git config --global user.name "Artemi Mihhalenkov"
-C:\Users\opilane>git config --global user.email "artemi.mihhalenkov@gmail.com"
+C:\Users\opilane>git config --global user.name "Alexey Paal"
+C:\Users\opilane>git config --global user.email "cyberwasabi69@gmail.com"
 C:\Users\opilane>git config --global --list
-user.name=Artemi Mihhalenkov
-user.email=artemi.mihhalenkov@gmail.com
+user.name=Alexey Paal
+user.email=cyberwasabi69@gmail.com
 C:\Users\opilane>cd Desktop
 C:\Users\opilane\Desktop>git clone https://github.com/Sufed/Andmebaasis-steemide-alused.git
 Cloning into 'Andmebaasis-steemide-alused'...
