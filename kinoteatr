@@ -1,5 +1,6 @@
+DROP TABLE zanr
 CREATE DATABASE KinoteatrPaal;
-USE KinoteatrPaal;
+use paal
 
 ---Tabeli loomine zanr .
 CREATE TABLE zanr(
@@ -7,7 +8,7 @@ CREATE TABLE zanr(
 	zanrNimi varchar(25),
 	zanrKirjeldus TEXT)
 INSERT INTO zanr (zanrNimi, zanrKirjeldus)
-VALUES ('komöödia', 'naeruväärne'), ('perekonna', 'väga ilus'), ('õudus', 'väga hirmutav'), ('Ilukirjandus', 'Põnev'), ('Cartoon', 'Põnev')
+VALUES ('Komöödia', 'naeruväärne'), ('Perekonna', 'siiras ja lahke'), ('Õudus', 'hirmutav'), ('Detektiiv', 'huuvitav')
 SELECT * FROM zanr
 
 
@@ -19,11 +20,11 @@ CREATE TABLE filmType(
 	filmType varchar(25),
 	kirjeldus TEXT)
 INSERT INTO filmType (filmType, kirjeldus)
-VALUES ('3D', 'väga põnev 3D efekt'), ('2D', 'väSga põnev 2D efekt'), ('1D', 'väga põnev 1D efekt'), ('4D', 'väga põnev 4D efekt'), ('5D', 'väga põnev 5D efekt')
+VALUES ('5D', 'uue põlvkonna atraktsioon'), ('4D', '3D-kino ja füüsilised efektid'), ('3D', 'tekitades vaatajas illusiooni ruumi sügavusest '), ('2D', 'tavaline filmi taasesitus')
 SELECT * FROM filmType
 
 
-
+ALTER TABLE film ADD FOREIGN KEY (filmTypeId) REFERENCES filmType(filmTypeId);
 
 ---Tabeli loomine rezisor.
 CREATE TABLE rezisor(
@@ -35,19 +36,19 @@ VALUES ('Alexey', 'Paal'), ('Nikita', 'Kersanov'), ('Stanislav', 'Tsugunov'), ('
 SELECT * FROM rezisor
 
 
+ALTER TABLE film ADD FOREIGN KEY (rezisorId) REFERENCES rezisor(resizorId);
 
 
-
----Tabeli loomine piletiMyyk.
-CREATE TABLE piletiMyyk(
+---Tabeli loomine piletiMuuk.
+CREATE TABLE piletiMuuk(
 	piletiMyykId int Primary Key identity(1,1),
 	kogus int,
 	kinokavaId int)
-INSERT INTO piletiMyyk (kogus, kinokavaId)
+INSERT INTO piletiMuuk (kogus, kinokavaId)
 VALUES (11, 3)
-SELECT * FROM piletiMyyk
+SELECT * FROM piletiMuuk
 
-
+ALTER TABLE piletiMyyk ADD FOREIGN KEY (kinokavaId) REFERENCES kinokava(kinokavaId);
 
 
 ---Tabeli loomine kinokava.
@@ -57,9 +58,10 @@ CREATE TABLE kinokava(
 	filmNimetus int,
 	piletihind int)
 INSERT INTO kinokava (kuupaev, filmNimetus, piletihind)
-VALUES ('12.04.24',  4, 12)
+VALUES ('12.04.24',  4, 12.99)
 SELECT * FROM kinokava
 
+ALTER TABLE kinokava ADD FOREIGN KEY (filmNimetus) REFERENCES film(filmId);
 
 ---Tabeli loomine film.
 CREATE TABLE film(
@@ -69,24 +71,10 @@ CREATE TABLE film(
 	pikkus int,
 	rezisorId int,
 	filmTypeId int,
-	reklaam image)
+	)
 INSERT INTO film (filmNimetus, pikkus, zanrId, rezisorId, filmTypeId)
-VALUES ('Isa ja Ema', 12, 1, 1, 5)
+VALUES ('Sherlok Holms', 1.49, 1, 1, 5)
 SELECT * FROM film
 
-
----FK: film-->filmType
-ALTER TABLE film ADD FOREIGN KEY (filmTypeId) REFERENCES filmType(filmTypeId);
-
----FK: film-->rezisorId
-ALTER TABLE film ADD FOREIGN KEY (rezisorId) REFERENCES rezisor(resizorId);
-
----FK: film-->zanrId
 ALTER TABLE film ADD FOREIGN KEY (zanrId) REFERENCES zanr(zanrId);
 
-
----FK: kinokava-->filmId
-ALTER TABLE kinokava ADD FOREIGN KEY (filmNimetus) REFERENCES film(filmId);
-
----FK: piletiMyyk-->kinokavaId
-ALTER TABLE piletiMyyk ADD FOREIGN KEY (kinokavaId) REFERENCES kinokava(kinokavaId);
