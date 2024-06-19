@@ -124,24 +124,24 @@ DELIMITER ;
 
 
 
--- Uue auto lisamine
+-- start Protseduur, mis lisab uued autod Autoregistri
 CALL lisaAuto('Toyota', 'toyota corporation', 2020, 'Must', '55127232');
 
--- Autode kuvamine värvi järgi
+-- start  Protseduur, mis näitab kõik autod sisestatud värvi kaupa.
 CALL naitaAutod('Pruun', '');
 
--- Autode kuvamine aasta järgi
+-- start  Protseduur, mis näitab kõik autod sisestatud aasta kaupa.
 CALL naitaAutod(NULL, 2020);
 
--- Auto värvi uuendamine
+-- start Protseduur, mis võimaldab uuendada auto värvi või omanikuarvu id järgi.
 CALL uuendaAuto(1, 'Sinine', NULL);
 
 -- Auto omaniku numbri uuendamine
 CALL uuendaAuto(1, NULL, '5552376');
 
--- Auto kustutamine ID järgi
+-- start Protseduur, mis kustutab auto id järgi.
 CALL kustutaAuto(2);
 
--- Logitabeli sisu kuvamine
+-- start Näita tabeli logitabel sisu.
 CALL naitaLogi();
 
