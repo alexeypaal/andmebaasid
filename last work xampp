@@ -36,6 +36,123 @@ INSERT INTO klient (nimi, perenimi, telefon) VALUES ('Alexey', 'Paal', '55513554
 -- Näited tabelite vaatamiseks
 
 
+
+
+
+
+
+
+
+
+
+PROCEDUURIGA 2
+CREATE DATABASE Paal;
+
+USE Paal;
+
+CREATE TABLE klient (
+    klientId INT AUTO_INCREMENT PRIMARY KEY,
+    nimi VARCHAR(50),
+    perenimi VARCHAR(50),
+    telefon VARCHAR(20)
+);
+
+CREATE TABLE toode (
+    toodeId INT AUTO_INCREMENT PRIMARY KEY,
+    tootenimi VARCHAR(100),
+    uhikuhind DECIMAL(10, 2),
+    uhik VARCHAR(2)
+);
+
+CREATE TABLE ost (
+    ostId INT AUTO_INCREMENT PRIMARY KEY,
+    kliendiId INT,
+    tooteId INT,
+    FOREIGN KEY (kliendiId) REFERENCES klient(klientId),
+    FOREIGN KEY (tooteId) REFERENCES toode(toodeId)
+);
+
+CREATE TABLE logi (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    aeg DATETIME,
+    andmed VARCHAR(200),
+    kasutaja VARCHAR(100)
+);
+
+
+
+
+
+DELIMITER //
+
+-- Protseduur kliendi lisamiseks ja logimiseks
+CREATE PROCEDURE lisaKlient(
+    IN p_nimi VARCHAR(50),
+    IN p_perenimi VARCHAR(50),
+    IN p_telefon VARCHAR(20)
+)
+BEGIN
+    INSERT INTO klient (nimi, perenimi, telefon) 
+    VALUES (p_nimi, p_perenimi, p_telefon);
+    
+    INSERT INTO logi (aeg, andmed, kasutaja) 
+    VALUES (NOW(), 
+            CONCAT('Kliendi logi - Nimi: ', p_nimi, ' Perenimi: ', p_perenimi, ' Telefon: ', p_telefon), 
+            USER());
+END //
+
+-- Protseduur toote lisamiseks ja logimiseks
+CREATE PROCEDURE lisaToode(
+    IN p_tootenimi VARCHAR(100),
+    IN p_uhikuhind DECIMAL(10, 2),
+    IN p_uhik VARCHAR(2)
+)
+BEGIN
+    INSERT INTO toode (tootenimi, uhikuhind, uhik) 
+    VALUES (p_tootenimi, p_uhikuhind, p_uhik);
+    
+    INSERT INTO logi (aeg, andmed, kasutaja) 
+    VALUES (NOW(), 
+            CONCAT('Toote logi - Nimi: ', p_tootenimi, ' Hind: ', p_uhikuhind, ' Ühik: ', p_uhik), 
+            USER());
+END //
+
+-- Protseduur ostu lisamiseks ja logimiseks
+CREATE PROCEDURE lisaOst(
+    IN p_kliendiId INT,
+    IN p_tooteId INT
+)
+BEGIN
+    INSERT INTO ost (kliendiId, tooteId) 
+    VALUES (p_kliendiId, p_tooteId);
+    
+    INSERT INTO logi (aeg, andmed, kasutaja) 
+    VALUES (NOW(), 
+            CONCAT('Ostu logi - Klient ID: ', p_kliendiId, ' Toode ID: ', p_tooteId), 
+            USER());
+END //
+
+DELIMITER ;
+
+
+
+
+
+-- Lisa uus klient
+CALL lisaKlient('John', 'Doe', '555-1234');
+
+-- Lisa uus toode
+CALL lisaToode('Vaniili puding', 3.60, 'tk');
+
+-- Lisa uus ost
+CALL lisaOst(1, 1);
+
+-- Vaata tabelite sisu
+SELECT * FROM klient;
+SELECT * FROM toode;
+SELECT * FROM ost;
+SELECT * FROM logi;
+
 -- Ostutabelisse andmete lisamine
 INSERT INTO ost (kliendiId, tooteId) VALUES (1, 1);
 
