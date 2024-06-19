@@ -1,0 +1,147 @@
+CREATE DATABASE autoregistr;
+
+USE autoregistr;
+
+CREATE TABLE Auto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    mark VARCHAR(50),
+    tootja VARCHAR(50),
+    aasta INT,
+    varv VARCHAR(50),
+    OmanikuNumber VARCHAR(50)
+);
+
+CREATE TABLE Logi (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    toiming VARCHAR(50),
+    auto_id INT,
+    toimumise_aeg DATE
+);
+
+INSERT INTO Auto (mark, tootja, aasta, varv, OmanikuNumber)
+VALUES ('volkswagen passat','Volkswagen AG', 2021, 'pruun', '55512332');
+
+INSERT INTO Auto (mark, tootja, aasta, varv, OmanikuNumber)
+VALUES ('Kia K5','Kia corporation', 2024, 'sinine', '5107254);
+
+INSERT INTO Auto (mark, tootja, aasta, varv, OmanikuNumber)
+VALUES ('Bmw X6','Bmw corporation', 2019, 'valge', '5513552);
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE lisaAuto(
+    IN p_mark VARCHAR(50),
+    IN p_tootja VARCHAR(50),
+    IN p_aasta INT,
+    IN p_varv VARCHAR(50),
+    IN p_OmanikuNumber VARCHAR(50)
+)
+BEGIN
+    INSERT INTO Auto (mark, tootja, aasta, varv, OmanikuNumber)
+    VALUES (p_mark, p_tootja, p_aasta, p_varv, p_OmanikuNumber);
+    
+    INSERT INTO Logi (toiming, auto_id)
+    VALUES ('Lisa', LAST_INSERT_ID());
+END //
+
+DELIMITER ;
+
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE naitaAutod(
+    IN p_varv VARCHAR(50),
+    IN p_aasta INT
+)
+BEGIN
+    IF p_varv IS NOT NULL THEN
+        SELECT * FROM Auto WHERE varv = p_varv;
+    ELSE
+        SELECT * FROM Auto WHERE aasta = p_aasta;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE uuendaAuto(
+    IN p_id INT,
+    IN p_varv VARCHAR(50),
+    IN p_OmanikuNumber VARCHAR(50)
+)
+BEGIN
+    IF p_varv IS NOT NULL THEN
+        UPDATE Auto SET varv = p_varv WHERE id = p_id;
+        INSERT INTO Logi (toiming, auto_id)
+        VALUES ('Uuenda varv', p_id);
+    END IF;
+
+    IF p_OmanikuNumber IS NOT NULL THEN
+        UPDATE Auto SET OmanikuNumber = p_OmanikuNumber WHERE id = p_id;
+        INSERT INTO Logi (toiming, auto_id)
+        VALUES ('Uuenda OmanikuNumber', p_id);
+    END IF;
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE kustutaAuto(
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM Auto WHERE id = p_id;
+    
+    INSERT INTO Logi (toiming, auto_id)
+    VALUES ('Kustuta', p_id);
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE naitaLogi()
+BEGIN
+    SELECT * FROM Logi;
+END //
+
+DELIMITER ;
+
+
+
+
+-- Uue auto lisamine
+CALL lisaAuto('Toyota', 'toyota corporation', 2020, 'Must', '55127232');
+
+-- Autode kuvamine värvi järgi
+CALL naitaAutod('Pruun', '');
+
+-- Autode kuvamine aasta järgi
+CALL naitaAutod(NULL, 2020);
+
+-- Auto värvi uuendamine
+CALL uuendaAuto(1, 'Sinine', NULL);
+
+-- Auto omaniku numbri uuendamine
+CALL uuendaAuto(1, NULL, '5552376');
+
+-- Auto kustutamine ID järgi
+CALL kustutaAuto(2);
+
+-- Logitabeli sisu kuvamine
+CALL naitaLogi();
+
