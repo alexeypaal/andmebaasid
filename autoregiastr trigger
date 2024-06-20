@@ -1,0 +1,147 @@
+CREATE DATABASE paal;
+USE paal;
+
+CREATE TABLE auto (
+    autoID INT PRIMARY KEY AUTO_INCREMENT,
+    Number INT,
+    varv VARCHAR(20),
+    brand VARCHAR(100),
+    omanikud INT
+);
+
+CREATE TABLE logitabel (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    aeg DATETIME,
+    toiming VARCHAR(25),
+    andmed VARCHAR(50),
+    kasutaja VARCHAR(25)
+);
+
+
+INSERT INTO auto (Number, varv, brand, omanikud)
+VALUES (66666, 'pruun', 'KIa K5', 1);
+
+DELETE FROM auto WHERE autoID = 4;
+
+
+DELIMITER $$
+
+CREATE TRIGGER autoLisamine
+AFTER INSERT ON auto
+FOR EACH ROW
+BEGIN
+    INSERT INTO logitabel (aeg, toiming, andmed, kasutaja)
+    VALUES (NOW(), 'Auto on lisatud', 
+            CONCAT('Autonumber: ', NEW.Number, ' ', 'Brand: ', NEW.brand,
+                   ' ', 'Varv: ', NEW.varv, ' ', 'Omanikud: ', NEW.omanikud), 
+            USER());
+END $$
+
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER autoKustutamine
+AFTER DELETE ON auto
+FOR EACH ROW
+BEGIN
+    INSERT INTO logitabel (aeg, toiming, andmed, kasutaja)
+    VALUES (NOW(), 'Auto on kustutatud', 
+            CONCAT('Autonumber: ', OLD.Number, ' ', 'Brand: ', OLD.brand,
+                   ' ', 'Varv: ', OLD.varv, ' ', 'Omanikud: ', OLD.omanikud), 
+            USER());
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER autoUuendamine
+AFTER UPDATE ON auto
+FOR EACH ROW
+BEGIN
+    INSERT INTO logitabel (aeg, toiming, andmed, kasutaja)
+    VALUES (NOW(), 'Auto on uuendatud', 
+            CONCAT('vanad andmed: ', OLD.Number, ' ', 'Brand: ', OLD.brand,
+                   ' ', 'Varv: ', OLD.varv, ' ', 'Omanikud: ', OLD.omanikud, ', ',
+                   ' uued andmed: ', NEW.Number, ' ', 'Brand: ', NEW.brand,
+                   ' ', 'Varv: ', NEW.varv, ' ', 'Omanikud: ', NEW.omanikud),
+            USER());
+END $$
+
+DELIMITER ;
+
+
+
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE KustutaAuto (IN id INT)
+BEGIN
+    DELETE FROM auto WHERE autoID = id;
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE KustutaAuto (IN id INT)
+BEGIN
+    DELETE FROM auto WHERE autoID = id;
+END $$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE LisaAuto (
+    IN id INT,
+    IN number INT,
+    IN varv VARCHAR(20),
+    IN brand VARCHAR(100), 
+    IN omanikud INT
+)
+BEGIN
+    INSERT INTO auto (autoID, Number, varv, brand, omanikud)
+    VALUES (id, number, varv, brand, omanikud);
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE AutoOtsing (IN omanikud INT)
+BEGIN
+    SELECT * FROM auto WHERE omanikud LIKE CONCAT(omanikud, '%');
+END $$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE AutoUuend (
+    IN id INT,
+    IN varv VARCHAR(20)
+)
+BEGIN
+    UPDATE auto 
+    SET varv = varv
+    WHERE autoID = id;
+END $$
+
+DELIMITER ;
+
+
+
